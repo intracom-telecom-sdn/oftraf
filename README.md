@@ -28,7 +28,7 @@ sudo apt-get install python-pypcap python-dpkt python-bottle
 # Usage
 
 ```bash
-sudo python oftraf.py --rest-host <host> --rest-port <port> --of-port <ofport> --ifname <interface>
+sudo python oftraf.py --rest-host <host> --rest-port <port> --of-port <ofport> --ifname <interface> [--server]
 ```
 
 Command line arguments: 
@@ -37,6 +37,7 @@ Command line arguments:
 - `--rest-port`: the port the REST server should listen to
 - `--of-port`: the OpenFlow port number based on which packet filtering will take place
 - `--ifname`: the network interface to sniff packets from
+- `--server`: run `oftraf` as server only without printing stats
 
 Example: 
 

@@ -269,13 +269,21 @@ if __name__ == "__main__":
                         dest='ifname',
                         action='store',
                         help='Network interface to sniff OF packets from')
+    parser.add_argument('--server',
+                        required=False,
+                        dest='is_server',
+                        action='store_true',
+                        default=False,
+                        help='Run oftraf as server only without printing stats')
     args = parser.parse_args()
 
     sniffer = threading.Thread(target=of_sniff, args=(args.ifname, args.of_port))
-    poller = threading.Thread(target=print_stats)
     sniffer.daemon = True
-    poller.daemon = True
-
     sniffer.start()
-    poller.start()
+
+    if not args.is_server:
+        poller = threading.Thread(target=print_stats)
+        poller.daemon = True
+        poller.start()
+
     bottle.run(host=args.rest_host, port=args.rest_port, quiet=True)
