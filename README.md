@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/intracom-telecom-sdn/oftraf.svg)](https://travis-ci.org/intracom-telecom-sdn/oftraf)
+[![Code Health](https://landscape.io/github/intracom-telecom-sdn/oftraf/master/landscape.svg?style=flat)](https://landscape.io/github/intracom-telecom-sdn/oftraf/master)
+
 # oftraf
 
 RESTful OpenFlow traffic monitor
