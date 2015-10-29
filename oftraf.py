@@ -15,7 +15,12 @@ import os
 import pcap
 import time
 import threading
+from sets import Set
 
+of10_valid_types = Set(['\x00', '\x01', '\x02', '\x03', '\x04', '\x05', '\x06', '\x07', '\x08', '\x09', '\x0a', '\x0b', '\x0c', '\x0d', '\x0e', '\x0f',
+                        '\x10', '\x11', '\x12', '\x13', '\x14', '\x15'])
+"""set of str: the valid OpenFlow 1.0 message types
+"""
 
 of10_types = {
     '\x00': 'OFPT_HELLO',
@@ -42,6 +47,11 @@ of10_types = {
     '\x15': 'OFPT_QUEUE_GET_CONFIG_REPLY'
 }
 """dict of str:str: maps a packet type to an OpenFlow 1.0 message type
+"""
+
+of13_valid_types = Set(['\x00', '\x01', '\x02', '\x03', '\x04', '\x05', '\x06', '\x07', '\x08', '\x09', '\x0a', '\x0b', '\x0c', '\x0d', '\x0e', '\x0f',
+                        '\x10', '\x11', '\x12', '\x13', '\x14', '\x15', '\x16', '\x17', '\x18', '\x19', '\x1a', '\x1b', '\x1c', '\x1d'])
+"""set of str: the valid OpenFlow 1.3 message types
 """
 
 of13_types = {
@@ -109,12 +119,20 @@ def of_sniff(ifname, ofport):
         ofport (int): OF port number used for packet filtering
     """
 
+    tcp_pkts_malformed = 0L
+    of10_pkts_malformed = 0L
+    of13_pkts_malformed = 0L
+
     try:
         for _, pkt in pcap.pcap(name=ifname, immediate=True):
 
             eth = dpkt.ethernet.Ethernet(pkt)
             tcp = eth.data.data
             nbytes = len(eth.data)
+
+            if type(tcp) != dpkt.tcp.TCP:
+                tcp_pkts_malformed += 1
+                continue
 
             # element 0: packet count
             # element 1: total packet bytes
@@ -139,6 +157,9 @@ def of_sniff(ifname, ofport):
 
             # OF1.0
             if of_version == '\x01':
+                if of_type not in of10_valid_types:
+                    of10_pkts_malformed += 1
+                    continue
                 if not of10_types[of_type] in of10_counts:
                     of10_counts[of10_types[of_type]] = [1L, long(nbytes)]
                 else:
@@ -146,6 +167,9 @@ def of_sniff(ifname, ofport):
                     of10_counts[of10_types[of_type]][1] += long(nbytes)
             # OF1.3
             elif of_version == '\x04':
+                if of_type not in of13_valid_types:
+                    of13_pkts_malformed += 1
+                    continue
                 if not of13_types[of_type] in of13_counts:
                     of13_counts[of13_types[of_type]] = [1L, long(nbytes)]
                 else:
