@@ -19,7 +19,7 @@
 
     var xVal = 0;
     var yVal = 100;
-    var updateInterval = 5000;
+    var updateInterval = 100;
     var dataLength = 500; // number of dataPoints visible at any point
     var prevYVal = 0
     var xVal = 0
@@ -36,11 +36,13 @@
         //    "OF13_OFPT_MULTIPART_REQUEST"
         //    "OF13_OFPT_PACKET_IN"
         //    "OF13_OFPT_PACKET_OUT"
+        console.log('update chart');
         yVal = jQuery.ajax({
             type: "GET",
             url: url,
-            data: data,
-            dataType:"text|html|json|jsonp|script|xml"
+            headers: {"Access-Control-Allow-Origin": "*"},
+            crossDomain: true,
+            dataType:"json",
             success: function(data, status, jqXHR) {
                 return data[key][packetsOrBytes];
             },
@@ -64,10 +66,11 @@
     };
 
     // generates first set of dataPoints
-    //updateChart(dataLength);
+    dps.push({ x: 0, y: 0});
+    chart.render();
 
     // update chart after specified time.
-    setInterval(function(){updateChart("http://127.0.0.1:5007/get_of13_counts", "OF_in_counts", 1)}, updateInterval);
+    setInterval(function(){updateChart("http://10.1.32.45:5008/get_of13_counts", "OF_in_counts", 1);}, updateInterval);
   }
 	</script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
