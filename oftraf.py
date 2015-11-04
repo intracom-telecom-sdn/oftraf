@@ -239,7 +239,9 @@ def get_of_counts():
     cnts = {}
     cnts["OF_in_counts"] = ofin_counts
     cnts["OF_out_counts"] = ofout_counts
-    return json.dumps(cnts)
+    return bottle.HTTPResponse(status=200,
+                               headers={'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                               body=json.dumps(cnts))
 
 @bottle.route('/get_of10_counts', method='GET')
 def get_of10_counts():
@@ -248,7 +250,9 @@ def get_of10_counts():
     Returns:
         str: JSON object with detailed OF10 counts
     """
-    return json.dumps(of10_counts)
+    return bottle.HTTPResponse(status=200,
+                               headers={'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                               body=json.dumps(of10_counts))
 
 @bottle.route('/get_of13_counts', method='GET')
 def get_of13_counts():
@@ -257,7 +261,9 @@ def get_of13_counts():
     Returns:
         str: JSON object with detailed OF13 counts
     """
-    return json.dumps(of13_counts)
+    return bottle.HTTPResponse(status=200,
+                               headers={'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                               body=json.dumps(of13_counts))
 
 @bottle.route('/stop', method='GET')
 def stop():

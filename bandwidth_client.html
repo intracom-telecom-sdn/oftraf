@@ -2,29 +2,44 @@
 <html>
 
 <head>
-	<script type="text/javascript">
-  window.onload = function () {
+  <script type="text/javascript">
+    window.onload = function () {
+      var units = Object.freeze({PACKETS: 0, BYTES: 1});
 
-    var dps = []; // dataPoints
 
-    var chart = new CanvasJS.Chart("chartContainer",{
-      title :{
-        text: "Live Bandwidth Bytes In"
-      },
-      data: [{
-        type: "line",
-        dataPoints: dps
-      }]
-    });
+      var dps = []; // dataPoints
+      var URL = "http://127.0.0.1:5008/get_of_counts";
+      var countsType = "OF_in_counts";
+      var packetsOrBytes = units.BYTES;
+      var chart = new CanvasJS.Chart("chartContainer",{
+        title :{
+          text: "Live Bandwidth Bytes In (KB/s)"
+        },
+        data: [{
+          type: "line",
+          dataPoints: dps
+        }]
+      });
 
-    var xVal = 0;
-    var yVal = 100;
-    var updateInterval = 100;
-    var dataLength = 500; // number of dataPoints visible at any point
-    var prevYVal = 0
-    var xVal = 0
-
-    var updateChart = function (url, key, packetsOrBytes) {
+      var xVal = 0;
+      var updateInterval = 500;
+      var dataLength = 1000; // number of dataPoints visible at any point
+      var diffYVal = 0;
+      var prevYVal = 0;
+      jQuery.ajax({
+        type: "GET",
+        url: URL,
+        async:true,
+        dataType : 'json',   //you may use jsonp for cross origin request
+        success: function(data, status, jqXHR) {
+          prevYVal = data[countsType][packetsOrBytes];
+        },
+        error: function(jqXHR, status) {
+          console.log('ERROR initial request');
+          prevYVal = 0;               
+        }
+      });
+      var updateChart = function (url, key, pOrB) {
         // packetsOrBytes is 0 for packets and 1 for bytes
         // key is one of
         //    "OF_out_counts"
@@ -36,23 +51,22 @@
         //    "OF13_OFPT_MULTIPART_REQUEST"
         //    "OF13_OFPT_PACKET_IN"
         //    "OF13_OFPT_PACKET_OUT"
-        console.log('update chart');
-        yVal = jQuery.ajax({
+        jQuery.ajax({
             type: "GET",
             url: url,
-            headers: {"Access-Control-Allow-Origin": "*"},
-            crossDomain: true,
-            dataType:"json",
+            async:true,
+            dataType : 'json',   //you may use jsonp for cross origin request
             success: function(data, status, jqXHR) {
-                return data[key][packetsOrBytes];
+              yVal = data[key][pOrB];
+              diffYVal = 1000 * ((yVal - prevYVal) >> 10) / updateInterval ;
+              console.log(diffYVal);
+              prevYVal = yVal;
             },
             error: function(jqXHR, status) {
-               return prevYVal;
+              diffYVal = -1;               
             }
         });
-        diffYVal = yVal - prevYVal;
-        prevYVal = yVal;
-        dps.push({
+       dps.push({
             x: xVal,
             y: diffYVal
         });
@@ -63,21 +77,20 @@
         }
 
         chart.render();
-    };
+      };
 
-    // generates first set of dataPoints
-    dps.push({ x: 0, y: 0});
-    chart.render();
+      // generates first set of dataPoints
+      dps.push({ x: 0, y: 0});
+      chart.render();
 
-    // update chart after specified time.
-    setInterval(function(){updateChart("http://10.1.32.45:5008/get_of13_counts", "OF_in_counts", 1);}, updateInterval);
-  }
-	</script>
+      // update chart after specified time.
+      setInterval(function(){ updateChart(URL, countsType, packetsOrBytes) }, updateInterval);
+    }
+  </script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 </head>
 <body>
-	<div id="chartContainer" style="height: 300px; width:100%;">
-	</div>
+  <div id="chartContainer" style="height: 300px; width:100%;"></div>
 </body>
 </html>
