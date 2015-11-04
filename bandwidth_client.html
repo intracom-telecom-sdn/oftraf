@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<script type="text/javascript">
+  window.onload = function () {
+
+    var dps = []; // dataPoints
+
+    var chart = new CanvasJS.Chart("chartContainer",{
+      title :{
+        text: "Live Bandwidth Bytes In"
+      },
+      data: [{
+        type: "line",
+        dataPoints: dps
+      }]
+    });
+
+    var xVal = 0;
+    var yVal = 100;
+    var updateInterval = 5000;
+    var dataLength = 500; // number of dataPoints visible at any point
+    var prevYVal = 0
+    var xVal = 0
+
+    var updateChart = function (url, key, packetsOrBytes) {
+        // packetsOrBytes is 0 for packets and 1 for bytes
+        // key is one of
+        //    "OF_out_counts"
+        //    "OF_in_counts"
+        //    "OF13_OFPT_ECHO_REPLY"
+        //    "OF13_OFPT_ECHO_REQUEST"
+        //    "OF13_OFPT_FLOW_MOD"
+        //    "OF13_OFPT_MULTIPART_REPLY"
+        //    "OF13_OFPT_MULTIPART_REQUEST"
+        //    "OF13_OFPT_PACKET_IN"
+        //    "OF13_OFPT_PACKET_OUT"
+        yVal = jQuery.ajax({
+            type: "GET",
+            url: url,
+            data: data,
+            dataType:"text|html|json|jsonp|script|xml"
+            success: function(data, status, jqXHR) {
+                return data[key][packetsOrBytes];
+            },
+            error: function(jqXHR, status) {
+               return prevYVal;
+            }
+        });
+        diffYVal = yVal - prevYVal;
+        prevYVal = yVal;
+        dps.push({
+            x: xVal,
+            y: diffYVal
+        });
+        xVal = xVal + updateInterval / 1000;
+
+        if (dps.length > dataLength) {
+            dps.shift();
+        }
+
+        chart.render();
+    };
+
+    // generates first set of dataPoints
+    //updateChart(dataLength);
+
+    // update chart after specified time.
+    setInterval(function(){updateChart("http://127.0.0.1:5007/get_of13_counts", "OF_in_counts", 1)}, updateInterval);
+  }
+	</script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+</head>
+<body>
+	<div id="chartContainer" style="height: 300px; width:100%;">
+	</div>
+</body>
+</html>
