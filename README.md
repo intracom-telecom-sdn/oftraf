@@ -53,25 +53,50 @@ Example:
   being displayed in real-time in a curses-based console which refreshes every 1 second.
   Sample output: 
   
-  ```
-  Elapsed seconds:994.4902
-  OF in pps:             29390.0
-  OF in Bps:           3885368.0
-  OF out pps:            31300.0
-  OF out Bps:          3964004.0
+```
+Elapsed seconds:89.1658
+OF in pps:                49.0
+OF in Bps:             27532.0
+OF out pps:               29.0
+OF out Bps:            16000.0
 
-  Packet Type                           Count          Bytes
-  --------------------------------------------------------------
-  Total OF in:                          700581         212923343
-  Total OF out:                         366417         114676077
-  OF13_OFPT_ECHO_REPLY:                 3088           185528
-  OF13_OFPT_ECHO_REQUEST:               3092           185520
-  OF13_OFPT_FLOW_MOD:                   353            81460
-  OF13_OFPT_MULTIPART_REPLY:            445024         171816903
-  OF13_OFPT_MULTIPART_REQUEST:          40668          87600195
-  OF13_OFPT_PACKET_IN:                  245614         40563432
-  OF13_OFPT_PACKET_OUT:                 9469           10533154
-  ```
+Packet Type                           Count          Bytes
+--------------------------------------------------------------
+Total OF in:                          9807           4275930
+Total OF out:                         5282           3328935
+
+Incoming
+----------------
+OF13_OFPT_ECHO_REQUEST:               6              360
+OF13_OFPT_ERROR:                      10             800
+OF13_OFPT_FEATURES_REPLY:             10             840
+OF13_OFPT_HELLO:                      10             680
+OF13_OFPT_MULTIPART_REPLY:            6424           2061320
+OF13_OFPT_PACKET_IN:                  508            89560
+OF13_OFPT_PORT_STATUS:                26             3432
+OF10_OFPT_ECHO_REQUEST:               9              540
+OF10_OFPT_ERROR:                      4              288
+OF10_OFPT_FEATURES_REPLY:             10             1512
+OF10_OFPT_HELLO:                      10             600
+OF10_OFPT_PACKET_IN:                  284            43054
+OF10_OFPT_PORT_STATUS:                81             9396
+OF10_OFPT_STATS_REPLY:                648            200048
+
+Outgoing
+----------------
+OF13_OFPT_ECHO_REPLY:                 6              360
+OF13_OFPT_FEATURES_REQUEST:           7              420
+OF13_OFPT_HELLO:                      14             1024
+OF13_OFPT_MULTIPART_REQUEST:          1301           1159444
+OF13_OFPT_PACKET_OUT:                 153            57012
+OF13_OFPT_SET_CONFIG:                 11             992
+OF10_OFPT_ECHO_REPLY:                 9              540
+OF10_OFPT_FEATURES_REQUEST:           6              360
+OF10_OFPT_HELLO:                      7              428
+OF10_OFPT_PACKET_OUT:                 47             11515
+OF10_OFPT_SET_CONFIG:                 11             704
+OF10_OFPT_STATS_REQUEST:              100            92344
+```
   
   **OF in** and **OF out** refer to OF traffic traveling into and out of the SDN controller,
   respectively. **pps** and **Bps** are packets-per-second and bytes-per-second.
@@ -107,14 +132,26 @@ Example:
 
   ```json
   {
-    "OF13_OFPT_ECHO_REPLY": [3088, 185528],
-    "OF13_OFPT_ECHO_REQUEST": [3092, 185520],
-    "OF13_OFPT_FLOW_MOD": [353, 81460],
-    "OF13_OFPT_MULTIPART_REPLY": [445024, 171816903],
-    "OF13_OFPT_MULTIPART_REQUEST": [40668, 87600195],
-    "OF13_OFPT_PACKET_IN": [245614, 40563432],
-    "OF13_OFPT_PACKET_OUT": [9469, 10533154]
-  }
+    "OF13_in_counts":
+    {
+      "OFPT_ERROR": [10, 800],
+      "OFPT_PORT_STATUS": [82, 10824],
+      "OFPT_MULTIPART_REPLY": [107, 28276],
+      "OFPT_FEATURES_REPLY": [10, 840],
+      "OFPT_HELLO": [10, 680],
+      "OFPT_PACKET_IN": [216, 38324],
+      "OFPT_ECHO_REQUEST": [10, 600]
+    },
+    "OF13_out_counts":
+    {
+      "OFPT_PACKET_OUT": [35, 7201],
+      "OFPT_FEATURES_REQUEST": [7, 420],
+      "OFPT_MULTIPART_REQUEST": [17, 8240],
+      "OFPT_SET_CONFIG": [9, 1332],
+      "OFPT_HELLO": [11, 788],
+      "OFPT_ECHO_REPLY": [10, 600]
+    }
+}
   ```
   
   Similarly, use the following REST request for OF10 statistics: 
