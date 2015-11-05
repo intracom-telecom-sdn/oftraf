@@ -109,11 +109,11 @@ of13_out_counts = {}
 bytes for that type
 """
 
-ofin_counts = [0L, 0L]
+of_in_counts = [0L, 0L]
 """list of long: list with total counts and bytes for the incoming OF packets
 """
 
-ofout_counts = [0L, 0L]
+of_out_counts = [0L, 0L]
 """list of long: list with total counts and bytes for the outgoing OF packets
 """
 
@@ -149,11 +149,11 @@ def of_sniff(ifname, ofport):
             # element 0: packet count
             # element 1: total packet bytes
             if tcp.dport == int(ofport):
-                ofin_counts[0] += 1
-                ofin_counts[1] += nbytes
+                of_in_counts[0] += 1
+                of_in_counts[1] += nbytes
             elif tcp.sport == int(ofport):
-                ofout_counts[0] += 1
-                ofout_counts[1] += nbytes
+                of_out_counts[0] += 1
+                of_out_counts[1] += nbytes
             else:
                 continue
 
@@ -235,8 +235,8 @@ def print_stats():
         win = curses.initscr()
         while True:
             time.sleep(sleep_secs)
-            curr_in = ofin_counts
-            curr_out = ofout_counts
+            curr_in = of_in_counts
+            curr_out = of_out_counts
             curr_of10_in = of10_in_counts
             curr_of10_out = of10_out_counts
             curr_of13_in = of13_in_counts
@@ -298,8 +298,8 @@ def get_of_counts():
         str: JSON object with total OF in and OF out counts
     """
     cnts = {}
-    cnts["OF_in_counts"] = ofin_counts
-    cnts["OF_out_counts"] = ofout_counts
+    cnts["OF_in_counts"] = of_in_counts
+    cnts["OF_out_counts"] = of_out_counts
     return json.dumps(cnts)
 
 @bottle.route('/get_of10_counts', method='GET')
