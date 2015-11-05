@@ -80,7 +80,7 @@ def poller(ip, port, out_folder):
     echo_of13_counts(out_folder, data, 'OF13_out_counts')
 
 
-def post_process(out_folder):
+def post_process(out_folder, timeout):
     for cnt_file in os.listdir(out_folder):
         counts = []
         bandwidth = []
@@ -89,13 +89,13 @@ def post_process(out_folder):
         bandwidth = [y - x for x,y in zip(counts, counts[1:])]
         with open('{0}/bandwidth_{1}'.format(out_folder, cnt_file), 'a+') as band_fd:
             for el in bandwidth:
-                band_fd.write(str(el))
+                band_fd.write(str(el / timeout))
                 band_fd.write('\n')
 
 def main(args):
     def catch_ctrlc(sig, frame):
         print "You pressed CTRL-C. Exiting..."
-        post_process(args.out_folder)
+        post_process(args.out_folder, float(args.timeout))
         sys.exit()
 
     signal.signal(signal.SIGINT, catch_ctrlc)
