@@ -89,8 +89,13 @@ of13_types = {
 """dict of str:str: maps a packet type to an OpenFlow 1.3 message type
 """
 
-of10_counts = {}
-"""dict of str:list: maps an OF10 message type to a list with total counts and
+of10_in_counts = {}
+"""dict of str:list: maps an incoming OF10 message type to a list with total counts and
+bytes for that type
+"""
+
+of10_out_counts = {}
+"""dict of str:list: maps an outgoing OF10 message type to a list with total counts and
 bytes for that type
 """
 
@@ -165,11 +170,18 @@ def of_sniff(ifname, ofport):
                 if of_type not in of10_valid_types:
                     of10_pkts_malformed += 1
                     continue
-                if not of10_types[of_type] in of10_counts:
-                    of10_counts[of10_types[of_type]] = [1L, long(nbytes)]
-                else:
-                    of10_counts[of10_types[of_type]][0] += 1L
-                    of10_counts[of10_types[of_type]][1] += long(nbytes)
+                if tcp.dport == int(ofport):
+                    if not of10_types[of_type] in of10_in_counts:
+                        of10_in_counts[of10_types[of_type]] = [1L, long(nbytes)]
+                    else:
+                        of10_in_counts[of10_types[of_type]][0] += 1L
+                        of10_in_counts[of10_types[of_type]][1] += long(nbytes)
+                elif tcp.sport == int(ofport):
+                    if not of10_types[of_type] in of10_out_counts:
+                        of10_out_counts[of10_types[of_type]] = [1L, long(nbytes)]
+                    else:
+                        of10_out_counts[of10_types[of_type]][0] += 1L
+                        of10_out_counts[of10_types[of_type]][1] += long(nbytes)
             # OF1.3
             elif of_version == '\x04':
                 if of_type not in of13_valid_types:
@@ -205,7 +217,8 @@ def print_stats():
             time.sleep(sleep_secs)
             curr_in = ofin_counts
             curr_out = ofout_counts
-            curr_of10 = of10_counts
+            curr_of10_in = of10_in_counts
+            curr_of10_out = of10_out_counts
             curr_of13_in = of13_in_counts
             curr_of13_out = of13_out_counts
 
@@ -235,6 +248,10 @@ def print_stats():
                 out += '{0:38}{1:15}{2:15}\n'.format('OF13_' + key + ':',
                                                      str(curr_of13_in[key][0]),
                                                      str(curr_of13_in[key][1]))
+            for key in sorted(of10_in_counts):
+                out += '{0:38}{1:15}{2:15}\n'.format('OF10_' + key + ':',
+                                                     str(curr_of10_in[key][0]),
+                                                     str(curr_of10_in[key][1]))
             out += '\nOutgoing\n'
             out += '----------------\n'
 
@@ -242,10 +259,10 @@ def print_stats():
                 out += '{0:38}{1:15}{2:15}\n'.format('OF13_' + key + ':',
                                                      str(curr_of13_out[key][0]),
                                                      str(curr_of13_out[key][1]))
-            for key in sorted(of10_counts):
+            for key in sorted(of10_out_counts):
                 out += '{0:38}{1:15}{2:15}\n'.format('OF10_' + key + ':',
-                                                     str(curr_of10[key][0]),
-                                                     str(curr_of10[key][1]))
+                                                     str(curr_of10_out[key][0]),
+                                                     str(curr_of10_out[key][1]))
             prev_in = list(curr_in)
             prev_out = list(curr_out)
             win.addstr(0,0, out)
