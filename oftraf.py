@@ -94,8 +94,13 @@ of10_counts = {}
 bytes for that type
 """
 
-of13_counts = {}
-"""dict of str:list: maps an OF13 message type to a list with total counts and
+of13_in_counts = {}
+"""dict of str:list: maps an incoming OF13 message type to a list with total counts and
+bytes for that type
+"""
+
+of13_out_counts = {}
+"""dict of str:list: maps an outgoing OF13 message type to a list with total counts and
 bytes for that type
 """
 
@@ -170,11 +175,18 @@ def of_sniff(ifname, ofport):
                 if of_type not in of13_valid_types:
                     of13_pkts_malformed += 1
                     continue
-                if not of13_types[of_type] in of13_counts:
-                    of13_counts[of13_types[of_type]] = [1L, long(nbytes)]
-                else:
-                    of13_counts[of13_types[of_type]][0] += 1L
-                    of13_counts[of13_types[of_type]][1] += long(nbytes)
+                if tcp.dport == int(ofport):
+                    if not of13_types[of_type] in of13_in_counts:
+                        of13_in_counts[of13_types[of_type]] = [1L, long(nbytes)]
+                    else:
+                        of13_in_counts[of13_types[of_type]][0] += 1L
+                        of13_in_counts[of13_types[of_type]][1] += long(nbytes)
+                elif tcp.sport == int(ofport):
+                    if not of13_types[of_type] in of13_out_counts:
+                        of13_out_counts[of13_types[of_type]] = [1L, long(nbytes)]
+                    else:
+                        of13_out_counts[of13_types[of_type]][0] += 1L
+                        of13_out_counts[of13_types[of_type]][1] += long(nbytes)
 
     except KeyboardInterrupt:
         os._exit(1)
@@ -194,7 +206,8 @@ def print_stats():
             curr_in = ofin_counts
             curr_out = ofout_counts
             curr_of10 = of10_counts
-            curr_of13 = of13_counts
+            curr_of13_in = of13_in_counts
+            curr_of13_out = of13_out_counts
 
             in_rate = [(b-a)/float(sleep_secs) for (a,b) in zip(prev_in, curr_in)]
             out_rate = [(b-a)/float(sleep_secs) for (a,b) in zip(prev_out, curr_out)]
@@ -214,10 +227,21 @@ def print_stats():
             out += '{0:38}{1:15}{2:15}\n'.format('Total OF out:',
                                                  str(curr_out[0]),
                                                  str(curr_out[1]))
-            for key in sorted(of13_counts):
+
+            out += '\nIncoming\n'
+            out += '----------------\n'
+
+            for key in sorted(of13_in_counts):
                 out += '{0:38}{1:15}{2:15}\n'.format('OF13_' + key + ':',
-                                                     str(curr_of13[key][0]),
-                                                     str(curr_of13[key][1]))
+                                                     str(curr_of13_in[key][0]),
+                                                     str(curr_of13_in[key][1]))
+            out += '\nOutgoing\n'
+            out += '----------------\n'
+
+            for key in sorted(of13_out_counts):
+                out += '{0:38}{1:15}{2:15}\n'.format('OF13_' + key + ':',
+                                                     str(curr_of13_out[key][0]),
+                                                     str(curr_of13_out[key][1]))
             for key in sorted(of10_counts):
                 out += '{0:38}{1:15}{2:15}\n'.format('OF10_' + key + ':',
                                                      str(curr_of10[key][0]),
