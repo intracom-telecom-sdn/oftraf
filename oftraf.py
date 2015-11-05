@@ -130,8 +130,10 @@ def of_sniff(ifname, ofport):
     """
 
     tcp_pkts_malformed = 0L
-    of10_pkts_malformed = 0L
-    of13_pkts_malformed = 0L
+    of10_in_pkts_malformed = 0L
+    of10_out_pkts_malformed = 0L
+    of13_in_pkts_malformed = 0L
+    of13_out_pkts_malformed = 0L
 
     try:
         for _, pkt in pcap.pcap(name=ifname, immediate=True):
@@ -167,16 +169,25 @@ def of_sniff(ifname, ofport):
 
             # OF1.0
             if of_version == '\x01':
-                if of_type not in of10_valid_types:
-                    of10_pkts_malformed += 1
-                    continue
+                # Incoming message
                 if tcp.dport == int(ofport):
+
+                    if of_type not in of10_valid_types:
+                        of10_in_pkts_malformed += 1
+                        continue
+
                     if not of10_types[of_type] in of10_in_counts:
                         of10_in_counts[of10_types[of_type]] = [1L, long(nbytes)]
                     else:
                         of10_in_counts[of10_types[of_type]][0] += 1L
                         of10_in_counts[of10_types[of_type]][1] += long(nbytes)
+                # Outgoing message  
                 elif tcp.sport == int(ofport):
+
+                    if of_type not in of10_valid_types:
+                        of10_out_pkts_malformed += 1
+                        continue
+
                     if not of10_types[of_type] in of10_out_counts:
                         of10_out_counts[of10_types[of_type]] = [1L, long(nbytes)]
                     else:
@@ -184,16 +195,25 @@ def of_sniff(ifname, ofport):
                         of10_out_counts[of10_types[of_type]][1] += long(nbytes)
             # OF1.3
             elif of_version == '\x04':
-                if of_type not in of13_valid_types:
-                    of13_pkts_malformed += 1
-                    continue
+                # Incoming message
                 if tcp.dport == int(ofport):
+                    
+                    if of_type not in of13_valid_types:
+                        of13_in_pkts_malformed += 1
+                        continue
+                    
                     if not of13_types[of_type] in of13_in_counts:
                         of13_in_counts[of13_types[of_type]] = [1L, long(nbytes)]
                     else:
                         of13_in_counts[of13_types[of_type]][0] += 1L
                         of13_in_counts[of13_types[of_type]][1] += long(nbytes)
+                # Outgoing message
                 elif tcp.sport == int(ofport):
+
+                    if of_type not in of13_valid_types:
+                        of13_out_pkts_malformed += 1
+                        continue
+
                     if not of13_types[of_type] in of13_out_counts:
                         of13_out_counts[of13_types[of_type]] = [1L, long(nbytes)]
                     else:
