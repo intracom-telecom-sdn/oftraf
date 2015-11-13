@@ -300,7 +300,11 @@ def get_of_counts():
     cnts = {}
     cnts["OF_in_counts"] = of_in_counts
     cnts["OF_out_counts"] = of_out_counts
-    return json.dumps(cnts)
+
+    return bottle.HTTPResponse(status=200,
+                               headers={'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                               body=json.dumps(cnts))
+
 
 @bottle.route('/get_of10_counts', method='GET')
 def get_of10_counts():
@@ -312,7 +316,11 @@ def get_of10_counts():
     cnts = {}
     cnts["OF10_in_counts"] = of10_in_counts
     cnts["OF10_out_counts"] = of10_out_counts
-    return json.dumps(cnts)
+
+    return bottle.HTTPResponse(status=200,
+                               headers={'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                               body=json.dumps(cnts))
+
 
 @bottle.route('/get_of13_counts', method='GET')
 def get_of13_counts():
@@ -324,13 +332,18 @@ def get_of13_counts():
     cnts = {}
     cnts["OF13_in_counts"] = of13_in_counts
     cnts["OF13_out_counts"] = of13_out_counts
-    return json.dumps(cnts)
+
+    return bottle.HTTPResponse(status=200,
+                               headers={'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                               body=json.dumps(cnts))
+
 
 @bottle.route('/stop', method='GET')
 def stop():
     """ Callback function for stopping oftraf
     """
     os._exit(1)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
