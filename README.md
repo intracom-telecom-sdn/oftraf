@@ -168,3 +168,8 @@ OF10_OFPT_STATS_REQUEST:              100            92344
    $ curl  http://localhost:5555/stop
    ```
 
+# Future Extensions
+
+- more efficient OF packet filtering utilizing BPF filters
+- breakdown of certain OF message types to finer-grain subtypes (e.g. multipart replies)
+- graphical client dashboard
