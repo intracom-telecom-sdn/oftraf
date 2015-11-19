@@ -3,7 +3,7 @@
 
 # oftraf
 
-RESTful OpenFlow traffic monitor
+pcap-based, RESTful OpenFlow traffic monitor
 
 Filters OpenFlow packets from a network interface and reports statistics. 
 
@@ -16,6 +16,7 @@ Features:
 - Support for **OF1.0 and OF1.3 protocols**
 - **REST interface** for accessing statistics. This enables remote online 
   monitoring of a controller's incoming and outgoing OF traffic.
+- Non-intrusive to the controller
 
 # Requirements
 
