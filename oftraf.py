@@ -184,6 +184,9 @@ def of_sniff(ifname, ofport):
             # OpenFlow header is 4 bytes
             while(len(payload)>=4):
                 of_length = get_length_field_value(payload)
+                if of_length==0:
+                    of_packets_list.append(payload)
+                    break
                 of_packets_list.append(payload[0:of_length-1])
                 payload = payload[of_length:len(payload)]
 
