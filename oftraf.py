@@ -181,6 +181,7 @@ def of_sniff(ifname, ofport):
             #List of all encapsulated OpenFlow messages in tcp payload
             of_packets_list = []
 
+            # OpenFlow header is 4 bytes
             while(len(payload)>=4):
                 of_length = get_length_field_value(payload)
                 of_packets_list.append(payload[0:of_length-1])
@@ -188,8 +189,8 @@ def of_sniff(ifname, ofport):
 
             for of_packet in of_packets_list:
                 of_packet_bytes = len(of_packet)
-                of_version = payload[0]
-                of_type = payload[1]
+                of_version = of_packet[0]
+                of_type = of_packet[1]
 
                 # OF1.0
                 if of_version == '\x01':
