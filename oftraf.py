@@ -186,7 +186,7 @@ def of_sniff(ifname, ofport):
                 of_packets_list.append(payload[0:of_length-1])
                 payload = payload[of_length:len(payload)]
 
-            for of_packet in of_packet_list:
+            for of_packet in of_packets_list:
                 of_packet_bytes = len(of_packet)
                 of_version = payload[0]
                 of_type = payload[1]
