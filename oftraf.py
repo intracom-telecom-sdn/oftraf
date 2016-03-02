@@ -181,7 +181,7 @@ def of_sniff(ifname, ofport):
             #List of all encapsulated OpenFlow messages in tcp payload
             of_packets_list = []
 
-            while(len(payload)>0):
+            while(len(payload)>=4):
                 of_length = get_length_field_value(payload)
                 of_packets_list.append(payload[0:of_length-1])
                 payload = payload[of_length:len(payload)]
