@@ -184,7 +184,7 @@ def of_sniff(ifname, ofport):
             while(len(payload)>0):
                 of_length = get_length_field_value(payload)
                 of_packets_list.append(payload[0:of_length-1])
-                payload = payload[of_length-1,len(payload)]
+                payload = payload[of_length-1:len(payload)]
 
             for of_packet in of_packet_list:
                 of_packet_bytes = len(of_packet)
