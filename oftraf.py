@@ -118,11 +118,17 @@ of_out_counts = [0L, 0L]
 """
 
 def get_length_field_value(payload):
-    """Gets the value of length field (16 bit field) of OpenFlow payload
-    :param payload: bytes list of tcp payload
-    :type payload: list<char>
-    :returns: the length value as integer
-    :rtype: int
+    """Gets the value of length field (16 bit field) of OpenFlow payload.
+
+    OpenFlow header defines a 16 bit value, called length. This is the number
+    of bytes of the corresponded OpenFlow package, including the Header bytes.
+
+    Agrs:
+        payload (list<char>): bytes list of tcp payload. We want this length
+        value as an integer.
+
+    Returns:
+        Length of an OpenFlow package in number of bytes
     """
     length_high = hex(ord(payload[2]))
     length_low = hex(ord(payload[3]))
@@ -155,11 +161,18 @@ def of_sniff(ifname, ofport):
                 tcp = eth.data.data
             else:
                 continue
-            nbytes = len(eth.data)
 
             if type(tcp) != dpkt.tcp.TCP:
                 tcp_pkts_malformed += 1
                 continue
+
+            # do not further analyze the packet if it does not have any
+            # OpenFlow payload
+            payload = tcp.data
+            if len(payload) <= 1:
+                continue
+            else:
+                nbytes = len(payload)
 
             # element 0: packet count
             # element 1: total packet bytes
@@ -172,25 +185,19 @@ def of_sniff(ifname, ofport):
             else:
                 continue
 
-            payload = tcp.data
-
-            # do not further analyze the packet if it does not have any
-            # OpenFlow payload
-            if len(payload) <= 1:
-                continue
             #List of all encapsulated OpenFlow messages in tcp payload
-            of_packets_list = []
+            of_packets = []
 
             # OpenFlow header is 4 bytes
             while(len(payload)>=4):
                 of_length = get_length_field_value(payload)
                 if of_length==0:
-                    of_packets_list.append(payload)
+                    of_packets.append(payload)
                     break
-                of_packets_list.append(payload[0:of_length-1])
+                of_packets.append(payload[0:of_length-1])
                 payload = payload[of_length:len(payload)]
 
-            for of_packet in of_packets_list:
+            for of_packet in of_packets:
                 of_packet_bytes = len(of_packet)
                 of_version = of_packet[0]
                 of_type = of_packet[1]
