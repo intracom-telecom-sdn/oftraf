@@ -121,14 +121,14 @@ def get_length_field_value(payload):
     """Gets the value of length field (16 bit field) of OpenFlow payload.
 
     OpenFlow header defines a 16 bit value, called length. This is the number
-    of bytes of the corresponded OpenFlow package, including the Header bytes.
+    of bytes of the corresponded OpenFlow packet, including the header bytes.
 
-    Agrs:
+    Args:
         payload (list<char>): bytes list of tcp payload. We want this length
         value as an integer.
 
     Returns:
-        Length of an OpenFlow package in number of bytes
+        Length of an OpenFlow packet in number of bytes
     """
     length_high = hex(ord(payload[2]))
     length_low = hex(ord(payload[3]))
@@ -189,9 +189,9 @@ def of_sniff(ifname, ofport):
             of_packets = []
 
             # OpenFlow header is 4 bytes
-            while(len(payload)>=4):
+            while(len(payload) >= 4):
                 of_length = get_length_field_value(payload)
-                if of_length==0:
+                if of_length == 0:
                     of_packets.append(payload)
                     break
                 of_packets.append(payload[0:of_length-1])
