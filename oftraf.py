@@ -169,10 +169,9 @@ def of_sniff(ifname, ofport):
             # do not further analyze the packet if it does not have any
             # OpenFlow payload
             payload = tcp.data
-            if len(payload) <= 1:
+            nbytes = len(payload)
+            if nbytes <= 1:
                 continue
-            else:
-                nbytes = len(payload)
 
             # element 0: packet count
             # element 1: total packet bytes
