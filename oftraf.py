@@ -198,6 +198,8 @@ def of_sniff(ifname, ofport):
 
             for of_packet in of_packets:
                 of_packet_bytes = len(of_packet)
+                if of_packet_bytes < 4:
+                    continue
                 of_version = of_packet[0]
                 of_type = of_packet[1]
 
