@@ -173,15 +173,8 @@ def of_sniff(ifname, ofport):
             if nbytes <= 1:
                 continue
 
-            # element 0: packet count
-            # element 1: total packet bytes
-            if tcp.dport == int(ofport):
-                of_in_counts[0] += 1
-                of_in_counts[1] += nbytes
-            elif tcp.sport == int(ofport):
-                of_out_counts[0] += 1
-                of_out_counts[1] += nbytes
-            else:
+            # Check if tcp has openflow payload
+            if tcp.dport != int(ofport) and tcp.sport != int(ofport):
                 continue
 
             #List of all encapsulated OpenFlow messages in tcp payload
@@ -217,6 +210,8 @@ def of_sniff(ifname, ofport):
                         else:
                             of10_in_counts[of10_types[of_type]][0] += 1L
                             of10_in_counts[of10_types[of_type]][1] += long(of_packet_bytes)
+                        of_in_counts[0] += 1L
+                        of_in_counts[1] += long(of_packet_bytes)
                     # Outgoing message
                     elif tcp.sport == int(ofport):
 
@@ -229,6 +224,8 @@ def of_sniff(ifname, ofport):
                         else:
                             of10_out_counts[of10_types[of_type]][0] += 1L
                             of10_out_counts[of10_types[of_type]][1] += long(of_packet_bytes)
+                        of_out_counts[0] += 1L
+                        of_out_counts[1] += long(of_packet_bytes)
                 # OF1.3
                 elif of_version == '\x04':
                     # Incoming message
@@ -243,6 +240,8 @@ def of_sniff(ifname, ofport):
                         else:
                             of13_in_counts[of13_types[of_type]][0] += 1L
                             of13_in_counts[of13_types[of_type]][1] += long(of_packet_bytes)
+                        of_in_counts[0] += 1L
+                        of_in_counts[1] += long(of_packet_bytes)
                     # Outgoing message
                     elif tcp.sport == int(ofport):
 
@@ -255,7 +254,8 @@ def of_sniff(ifname, ofport):
                         else:
                             of13_out_counts[of13_types[of_type]][0] += 1L
                             of13_out_counts[of13_types[of_type]][1] += long(of_packet_bytes)
-
+                        of_out_counts[0] += 1L
+                        of_out_counts[1] += long(of_packet_bytes)
     except KeyboardInterrupt:
         os._exit(1)
 
