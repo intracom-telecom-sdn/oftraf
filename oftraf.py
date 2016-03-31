@@ -109,8 +109,18 @@ of13_out_counts = {}
 bytes for that type
 """
 
+tcp_of_in_counts = [0L, 0L]
+"""list of long: list with total counts and bytes for the incoming tcp packets
+with OF payload
+"""
+
 of_in_counts = [0L, 0L]
 """list of long: list with total counts and bytes for the incoming OF packets
+"""
+
+tcp_of_out_counts = [0L, 0L]
+"""list of long: list with total counts and bytes for the outgoing tcp packets
+with OF payload
 """
 
 of_out_counts = [0L, 0L]
@@ -176,6 +186,16 @@ def of_sniff(ifname, ofport):
             # Check if tcp has openflow payload
             if tcp.dport != int(ofport) and tcp.sport != int(ofport):
                 continue
+
+            # element 0: tcp with OF payload count
+            # element 1: total tcp with OF payload bytes
+            if tcp.dport == int(ofport):
+                tcp_of_in_counts[0] += 1
+                tcp_of_in_counts[1] += nbytes
+            elif tcp.sport == int(ofport):
+                tcp_of_out_counts[0] += 1
+                tcp_of_out_counts[1] += nbytes
+
 
             #List of all encapsulated OpenFlow messages in tcp payload
             of_packets = []
@@ -273,6 +293,8 @@ def print_stats():
             time.sleep(sleep_secs)
             curr_in = of_in_counts
             curr_out = of_out_counts
+            tcp_curr_in = tcp_of_in_counts
+            tcp_curr_out = tcp_of_out_counts
             curr_of10_in = of10_in_counts
             curr_of10_out = of10_out_counts
             curr_of13_in = of13_in_counts
@@ -296,6 +318,12 @@ def print_stats():
             out += '{0:38}{1:15}{2:15}\n'.format('Total OF out:',
                                                  str(curr_out[0]),
                                                  str(curr_out[1]))
+            out += '{0:38}{1:15}{2:15}\n'.format('Total TCP with OF payload in:',
+                                                 str(tcp_curr_in[0]),
+                                                 str(tcp_curr_in[1]))
+            out += '{0:38}{1:15}{2:15}\n'.format('Total TCP with OF payload out:',
+                                                 str(tcp_curr_out[0]),
+                                                 str(tcp_curr_out[1]))
 
             out += '\nIncoming\n'
             out += '----------------\n'
@@ -336,6 +364,8 @@ def get_of_counts():
     cnts = {}
     cnts["OF_in_counts"] = of_in_counts
     cnts["OF_out_counts"] = of_out_counts
+    cnts["TCP_OF_in_counts"] = tcp_of_in_counts
+    cnts["TCP_OF_out_counts"] = tcp_of_out_counts
 
     return bottle.HTTPResponse(status=200,
                                headers={'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
