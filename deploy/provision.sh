@@ -51,7 +51,6 @@ pip3 $pip_options install -r $BASE_DIR/requirements.txt
 rm -rf $BASE_DIR/requirements.txt
 deactivate
 
-
 # This step is required to run jobs with any user
 #------------------------------------------------------------------------------
 chmod 777 -R $BASE_DIR
