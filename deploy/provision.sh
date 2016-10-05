@@ -28,7 +28,8 @@ apt-get update && apt-get install -y \
     python3.4-dev \
     python-pip \
     python3-pip \
-    python-virtualenv
+    python-virtualenv \
+    python-pypcap
 
 # Configure pip options
 #------------------------------------------------------------------------------
