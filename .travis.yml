@@ -10,7 +10,7 @@ dist: trusty
 language: bash
 
 install:
-    - sudo bash provision.sh
+    - sudo bash deploy/provision.sh
 
 script:
-    - sudo bash run.sh
+    - sudo bash deploy/run.sh
