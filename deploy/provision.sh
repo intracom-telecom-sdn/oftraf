@@ -51,11 +51,6 @@ pip3 $pip_options install -r $BASE_DIR/requirements.txt
 rm -rf $BASE_DIR/requirements.txt
 deactivate
 
-# NSTAT installation
-#------------------------------------------------------------------------------
-git clone https://github.com/intracom-telecom-sdn/nstat.git $BASE_DIR/oftraf
-git --git-dir=$BASE_DIR/oftraf/.git --work-tree=$BASE_DIR/oftraf checkout master
-apt-get clean
 
 # This step is required to run jobs with any user
 #------------------------------------------------------------------------------
