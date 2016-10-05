@@ -11,10 +11,10 @@ language: bash
 
 install:
     - sudo bash deploy/provision.sh
-#
-#script:
-#    - source /opt/venv_oftraf/bin/activate
-#    - git clone http://github.com/mininet/mininet $HOME/mininet
-#    - git --git-dir=$HOME/mininet/.git --work-tree=$HOME/mininet checkout 2.2.1
-#    - $HOME/mininet/util/install.sh -n3fv
-#    - sudo bash deploy/run.sh
+
+script:
+    - source /opt/venv_oftraf/bin/activate
+    - git clone http://github.com/mininet/mininet $HOME/mininet
+    - git --git-dir=$HOME/mininet/.git --work-tree=$HOME/mininet checkout 2.2.1
+    - $HOME/mininet/util/install.sh -n3fv
+    - sudo bash deploy/run.sh
