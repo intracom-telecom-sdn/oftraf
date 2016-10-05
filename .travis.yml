@@ -13,4 +13,5 @@ install:
     - sudo bash deploy/provision.sh
 
 script:
+    - source /opt/venv_oftraf/bin/activate
     - sudo bash deploy/run.sh
