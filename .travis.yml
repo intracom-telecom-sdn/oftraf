@@ -16,6 +16,6 @@ script:
     - git clone http://github.com/mininet/mininet $HOME/mininet
     - git --git-dir=$HOME/mininet/.git --work-tree=$HOME/mininet checkout 2.2.1
     - $HOME/mininet/util/install.sh -n3fv
-    - bash /opt/oftraf/deploy/venv_handler.sh /opt/venv_oftraf /opt/oftraf/oftraf.py localhost 5555 6653 lo
+    - sudo bash /opt/oftraf/deploy/venv_handler.sh /opt/venv_oftraf /opt/oftraf/oftraf.py localhost 5555 6653 lo
     - sudo bash deploy/run.sh
 #    - source /opt/venv_oftraf/bin/activate
