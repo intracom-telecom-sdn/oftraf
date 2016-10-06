@@ -7,20 +7,19 @@
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
 # $1 virtual env base path
-# $2 PYTHONPATH
-# $3 Handler path for OFTRAF
-# $4 --rest-host: the IP or hostname of the interface the REST server should listen to
-# $5 --rest-port: the port the REST server should listen to
-# $6 --of-port: the OpenFlow port number based on which packet filtering will take place
-# $7 --ifname: the network interface to sniff packets from
+# $2 Handler path for OFTRAF
+# $3 --rest-host: the IP or hostname of the interface the REST server should listen to
+# $4 --rest-port: the port the REST server should listen to
+# $5 --of-port: the OpenFlow port number based on which packet filtering will take place
+# $6 --ifname: the network interface to sniff packets from
 #    --server: run oftraf as server only without printing stats
 
-if [ "$#" -eq 8 ]
+if [ "$#" -eq 6 ]
 then
-    source $1/bin/activate; PYTHONPATH=$2 python $3 --rest-host $4 --rest-port $5 --of-port $6 --of-port $7 --server &
-elif [ "$#" -eq 7 ]
+    source $1/bin/activate; python $2 --rest-host $3 --rest-port $4 --of-port $5 --of-port $6 --server &
+elif [ "$#" -eq 5 ]
 then
-    PYTHONPATH=$1 python $2 --rest-host $3 --rest-port $4 --of-port $5 --of-port $6 --server
+    python $1 --rest-host $2 --rest-port $3 --of-port $4 --of-port $5 --server
 else
     echo "Invalid number of arguments."
     exit 1
