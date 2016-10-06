@@ -18,6 +18,17 @@ else
     echo "Empty PROXY variable"
     PROXY=""
 fi
+# Generic provisioning actions
+#------------------------------------------------------------------------------
+apt-get update && apt-get install -y \
+    git \
+    unzip \
+    wget \
+    openssh-client \
+    openssh-server \
+    bzip2 \
+    openssl \
+    net-tools
 
 # Python installation and other necessary libraries for pip
 #------------------------------------------------------------------------------
