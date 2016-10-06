@@ -17,5 +17,5 @@ script:
     - git --git-dir=$HOME/mininet/.git --work-tree=$HOME/mininet checkout 2.2.1
     - $HOME/mininet/util/install.sh -n3fv
     # Launch and test venv_handler
-    - sudo bash /opt/oftraf/deploy/venv_handler.sh /opt/venv_oftraf /opt/oftraf/oftraf.py localhost 5555 6653 lo
-    - sudo bash deploy/run_test.sh
+    - sudo bash /opt/oftraf/venv_handler.sh /opt/venv_oftraf /opt/oftraf/oftraf.py localhost 5555 6653 lo
+    - sudo bash run_test.sh
