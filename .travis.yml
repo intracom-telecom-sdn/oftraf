@@ -17,11 +17,6 @@ script:
     - git --git-dir=$HOME/mininet/.git --work-tree=$HOME/mininet checkout 2.2.1
     - $HOME/mininet/util/install.sh -n3fv
     - bash /opt/oftraf/deploy/venv_handler.sh /opt/venv_oftraf /opt/oftraf/oftraf.py localhost 5555 6653 lo
-    - $HOME/mininet/bin/mn &
-    - sleep 30
-    - curl http://localhost:5555/get_of10_counts
-    - echo
-    - curl http://localhost:5555/get_of_counts
-    - echo
-    - source /opt/venv_oftraf/bin/activate
-#    - sudo bash deploy/run.sh
+    - sudo bash deploy/run.sh
+#    - source /opt/venv_oftraf/bin/activate
+

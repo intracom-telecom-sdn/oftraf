@@ -6,8 +6,8 @@
 # terms of the Eclipse Public License v1.0 which accompanies this distribution,
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
-source /opt/venv_oftraf/bin/activate
-python oftraf.py --rest-host localhost --rest-port 5555 --of-port 6653 --ifname lo --server &
+#source /opt/venv_oftraf/bin/activate
+#python oftraf.py --rest-host localhost --rest-port 5555 --of-port 6653 --ifname lo --server &
 $HOME/mininet/bin/mn &
 sleep 30
 curl http://localhost:5555/get_of10_counts
