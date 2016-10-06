@@ -16,7 +16,7 @@
 
 if [ "$#" -eq 6 ]
 then
-    source $1/bin/activate; python $2 --rest-host $3 --rest-port $4 --of-port $5 --of-port $6 --server &
+    source $1/bin/activate; python $2 --rest-host $3 --rest-port $4 --of-port $5 --ifname $6 --server &
 elif [ "$#" -eq 5 ]
 then
     python $1 --rest-host $2 --rest-port $3 --of-port $4 --of-port $5 --server

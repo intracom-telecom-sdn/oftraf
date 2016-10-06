@@ -19,4 +19,3 @@ script:
     - bash /opt/oftraf/deploy/venv_handler.sh /opt/venv_oftraf /opt/oftraf/oftraf.py localhost 5555 6653 lo
     - sudo bash deploy/run.sh
 #    - source /opt/venv_oftraf/bin/activate
-
