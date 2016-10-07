@@ -6,20 +6,16 @@
 # terms of the Eclipse Public License v1.0 which accompanies this distribution,
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
-# $1 virtual env base path
-# $2 Handler path for OFTRAF
-# $3 --rest-host: the IP or hostname of the interface the REST server should listen to
-# $4 --rest-port: the port the REST server should listen to
-# $5 --of-port: the OpenFlow port number based on which packet filtering will take place
-# $6 --ifname: the network interface to sniff packets from
+# $1 Handler path for OFTRAF
+# $2 --rest-host: the IP or hostname of the interface the REST server should listen to
+# $3 --rest-port: the port the REST server should listen to
+# $4 --of-port: the OpenFlow port number based on which packet filtering will take place
+# $5 --ifname: the network interface to sniff packets from
 #    --server: run oftraf as server only without printing stats
 
-if [ "$#" -eq 6 ]
+if [ "$#" -eq 5 ]
 then
-    source $1/bin/activate; python $2 --rest-host $3 --rest-port $4 --of-port $5 --ifname $6 --server &
-elif [ "$#" -eq 5 ]
-then
-    python $1 --rest-host $2 --rest-port $3 --of-port $4 --of-port $5 --server
+    source /opt/venv_oftraf/bin/activate; python $1 --rest-host $2 --rest-port $3 --of-port $4 --ifname $5 --server &
 else
     echo "Invalid number of arguments."
     exit 1
