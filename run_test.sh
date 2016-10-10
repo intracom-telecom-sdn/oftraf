@@ -6,8 +6,9 @@
 # terms of the Eclipse Public License v1.0 which accompanies this distribution,
 # and is available at http://www.eclipse.org/legal/epl-v10.html
 
-apt-get -y update
-apt-get install -y git python python-pypcap python-dpkt python-bottle
-git clone http://github.com/mininet/mininet $HOME/mininet
-cd $HOME/mininet && git checkout -b 2.2.1
-$HOME/mininet/util/install.sh -n3fv
+$HOME/mininet/bin/mn &
+sleep 30
+curl http://localhost:5555/get_of10_counts
+echo
+curl http://localhost:5555/get_of_counts
+echo
