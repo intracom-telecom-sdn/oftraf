@@ -57,13 +57,13 @@ pip3 $pip_options install --upgrade pip
 mkdir $BASE_DIR/$VENV_DIR_OFTRAF
 virtualenv --system-site-packages $BASE_DIR/$VENV_DIR_OFTRAF
 
-wget https://raw.githubusercontent.com/intracom-telecom-sdn/oftraf/virtenv-rqrmnts/deploy/requirements.txt -P $BASE_DIR
+wget https://raw.githubusercontent.com/intracom-telecom-sdn/oftraf/master/deploy/requirements.txt -P $BASE_DIR
 source $BASE_DIR/$VENV_DIR_OFTRAF/bin/activate
 pip $pip_options install -r $BASE_DIR/requirements.txt
 rm -rf $BASE_DIR/requirements.txt
 deactivate
 
-git clone -b virtenv-rqrmnts https://github.com/intracom-telecom-sdn/oftraf.git $BASE_DIR"/oftraf"
+git clone -b master https://github.com/intracom-telecom-sdn/oftraf.git $BASE_DIR"/oftraf"
 
 # This step is required to run jobs with any user
 #------------------------------------------------------------------------------
