@@ -1,6 +1,10 @@
 [![Build Status](https://travis-ci.org/intracom-telecom-sdn/oftraf.svg)](https://travis-ci.org/intracom-telecom-sdn/oftraf)
 [![Code Health](https://landscape.io/github/intracom-telecom-sdn/oftraf/master/landscape.svg?style=flat)](https://landscape.io/github/intracom-telecom-sdn/oftraf/master)
 [![Docker Automated build](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg?maxAge=2592000)](https://hub.docker.com/r/intracom/oftraf/)
+[![Code Issues](https://www.quantifiedcode.com/api/v1/project/8e2065e3b1854903895c4745f7a3b829/badge.svg)](https://www.quantifiedcode.com/app/project/8e2065e3b1854903895c4745f7a3b829)
+
+
+
 # oftraf
 
 pcap-based, RESTful OpenFlow traffic monitor
