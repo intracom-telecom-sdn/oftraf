@@ -259,8 +259,8 @@ and enter the password
 password: root123
 ```
 
-After the above step we get a console inside the docker environment and you can run `oftraf`
-with the following command
+After the above step we get a console inside the docker environment and `oftraf`
+can be executed with the following command
 
 ```bash
 /opt/oftraf/start.sh <host_ip> <rest_server_port> <port_to_monitor_for_OpenFlow_messages>
