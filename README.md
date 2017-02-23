@@ -172,6 +172,133 @@ OF10_OFPT_STATS_REQUEST:              100            92344
    $ curl  http://localhost:5555/stop
    ```
 
+# Deployment of Docker containers
+
+This project provides two options for deployment with the use of Docker
+Containers
+
+- Deploy locally, using a `Dockerfile`
+- Deploy using a prebuild image from [Docker Hub](https://hub.docker.com/u/intracom/)
+
+In both cases, the [docker](https://www.docker.com/) platform must be installed
+on the host side.
+
+- essential tool: [docker](https://docs.docker.com/engine/installation/) (v.1.12.1 or later)
+
+and the actions below have to be followed
+
+- Give non-root access to docker daemon
+    * Add the docker group if it doesn't already exist sudo groupadd docker
+    * Add the connected user "${USER}" to the docker group. Change the user name to
+match your preferred user
+    ```bash
+    sudo gpasswd -a ${USER} docker
+    ```
+    * Restart the Docker daemon:
+    ```bash
+    sudo service docker restart
+
+## Deploy using Dockerfile
+
+There are 2 different folders, containing `Dockerfiles`,
+under the path `<PROJECT_DIR>/deploy`. The one `Dockerfile`
+is for a `proxy` environment and one is for a `no_proxy` environment. The
+names of the folders containing these `Dockerfiles` are `proxy` and `no_proxy`
+respectively.
+
+in order to deploy the `proxy` `Dockerfile` (`<PROJECT_DIR>/deploy/proxy/Dockerfile`),
+edit the proxy settings in the file. These settings are in the following lines.
+
+```bash
+ENV http_proxy="http://<proxy_ip>:<port>/"
+ENV https_proxy="http://<proxy_ip>:<port>/"
+
+RUN echo 'Acquire::http::Proxy "http://<proxy_ip>:<port>/";' | tee -a /etc/apt/apt.conf
+RUN echo 'Acquire::https::Proxy "http://<proxy_ip>:<port>/";'| tee -a /etc/apt/apt.conf
+
+RUN echo "http_proxy=http://<proxy_ip>:<port>/" | tee -a /etc/environment
+RUN echo "https_proxy=http://<proxy_ip>:<port>/" | tee -a /etc/environment
+RUN echo "no_proxy=127.0.0.1,localhost" | tee -a /etc/environment
+RUN echo "HTTP_PROXY=http://<proxy_ip>:<port>/" | tee -a /etc/environment
+RUN echo "HTTPS_PROXY=http://<proxy_ip>:<port>/" | tee -a /etc/environment
+RUN echo "NO_PROXY=127.0.0.1,localhost" | tee -a /etc/environment
+
+```
+
+After configuring the proxy settings, from the path of `Dockerfile`, run the command
+
+```bash
+docker build -t oftraf_base .
+```
+
+The above command would be the first step in case we deploy a `no_proxy` docker
+environment.
+
+Verify that the image has been built successfully by running the command
+
+```bash
+  docker images
+  ```
+
+the output of this command should look like the following sample
+
+```bash
+REPOSITORY         TAG        IMAGE ID          CREATED           SIZE
+oftraf_base       latest     c2c3152907b5      4 minutes ago     275.1 MB
+```
+
+to run the environment and start the `Docker container`, execute the following line
+
+```bash
+docker run -it oftraf_base /bin/bash
+```
+
+and enter the password
+
+```bash
+password: root123
+```
+
+After the above step we get a console inside the docker environment and you can run `oftraf`
+with the following command
+
+```bash
+/opt/oftraf/start.sh <host_ip> <rest_server_port> <port_to_monitor_for_OpenFlow_messages>
+```
+
+or alternatively, activate the virtual environment
+
+```bash
+source /opt/venv_oftraf/bin/activate
+```
+
+and follow the [Usage](https://github.com/intracom-telecom-sdn/oftraf#usage)
+section.
+
+## Deploy using prebuild image
+
+The first step is to get the image from [Docker Hub](https://hub.docker.com/u/intracom/)
+
+```bash
+docker pull intracom/nstat-sdn-controllers
+```
+Once the image pull operation is complete, check locally the existence of the
+image
+
+```bash
+docker images
+```
+which should list the ``intracom/nstat-sdn-controllers:latest`` image.  For
+running a container out of the ```intracom/nstat-sdn-controllers:latest``` image
+
+```
+docker run -it intracom/nstat-sdn-controllers /bin/bash
+```
+
+``password: root123``
+
+Run `oftraf` as described in the previous section after starting the `Docker container`.
+
 # Future Extensions
 
 - more efficient OF packet filtering utilizing BPF filters
