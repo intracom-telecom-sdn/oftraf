@@ -243,14 +243,14 @@ Verify that the image has been built successfully by running the command
 the output of this command should look like the following sample
 
 ```bash
-REPOSITORY         TAG        IMAGE ID          CREATED           SIZE
-oftraf_base       latest     c2c3152907b5      4 minutes ago     275.1 MB
+REPOSITORY         TAG             IMAGE ID          CREATED           SIZE
+<repo_name>        oftraf_base     c2c3152907b5      4 minutes ago     275.1 MB
 ```
 
 to run the environment and start the `Docker container`, execute the following line
 
 ```bash
-docker run -it oftraf_base /bin/bash
+docker run -it <repo_name>:oftraf_base /bin/bash
 ```
 
 and enter the password
