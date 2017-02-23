@@ -197,7 +197,7 @@ match your preferred user
     * Restart the Docker daemon:
     ```bash
     sudo service docker restart
-
+    ```
 ## Deploy using Dockerfile
 
 There are 2 different folders, containing `Dockerfiles`,
