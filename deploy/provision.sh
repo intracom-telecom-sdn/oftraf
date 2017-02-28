@@ -63,7 +63,7 @@ pip $pip_options install -r $BASE_DIR/requirements.txt
 rm -rf $BASE_DIR/requirements.txt
 deactivate
 
-git clone -b master https://github.com/intracom-telecom-sdn/oftraf.git $BASE_DIR"/oftraf"
+git clone -b v.1.0 https://github.com/intracom-telecom-sdn/oftraf.git $BASE_DIR"/oftraf"
 
 # This step is required to run jobs with any user
 #------------------------------------------------------------------------------
